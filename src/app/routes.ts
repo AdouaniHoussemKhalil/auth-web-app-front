@@ -4,9 +4,10 @@ export interface RouteDefinition {
   path: string;
   /**
    * - "private" : session requise, affichée dans le shell (redirection vers /login sinon) ;
-   * - "guest" : pages de connexion, réservées aux visiteurs non connectés (redirection vers / sinon).
+   * - "guest" : pages de connexion, réservées aux visiteurs non connectés (redirection vers / sinon) ;
+   * - "public" : lisible par tous (documentation) ; dans le shell si connecté.
    */
-  access: "private" | "guest";
+  access: "private" | "guest" | "public";
   /** Page chargée à la demande (découpage du bundle). Reçoit les paramètres de l'URL. */
   page: LazyExoticComponent<ComponentType<{ params: Record<string, string> }>>;
 }
@@ -25,6 +26,7 @@ export const routes: RouteDefinition[] = [
     access: "guest",
     page: lazy(() => import("@/pages/auth/VerifyEmailPage")),
   },
+  { path: "/docs", access: "public", page: lazy(() => import("@/pages/docs/DocsPage")) },
   { path: "/", access: "private", page: lazy(() => import("@/pages/HomePage")) },
   { path: "/profile", access: "private", page: lazy(() => import("@/pages/account/ProfilePage")) },
   { path: "/apps", access: "private", page: lazy(() => import("@/pages/apps/AppsListPage")) },

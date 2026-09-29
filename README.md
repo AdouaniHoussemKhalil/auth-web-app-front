@@ -96,6 +96,16 @@ Chaque vue gère les états chargement, erreur (avec « Réessayer »), vide et 
 `#/profile` (menu utilisateur → « Mon profil ») : prénom et nom modifiables (règles de l'API), e-mail en lecture seule.
 Après l'enregistrement, la session est mise à jour : le nouveau nom apparaît aussitôt dans le menu, sans reconnexion.
 
+## Documentation « Comment commencer »
+
+`#/docs` (barre latérale, et lien sur la page de connexion) : guide pas à pas pour brancher l'authentification sur une
+application Node + React. La page est publique : lisible sans compte, dans le dashboard une fois connecté.
+
+- Le contenu vit dans `src/features/docs`, qui ne dépend d'aucune autre feature : il pourra être extrait vers un site
+  de documentation déployé séparément.
+- Les exemples (`src/features/docs/examples/`) sont de vrais fichiers importés avec `?raw` : la page affiche exactement
+  le code testé (`examples.test.tsx`). Le back d'exemple `server.mjs` a été vérifié de bout en bout contre l'API.
+
 ## Charte graphique
 
 - Palette dans `src/styles/brand.css` : elle remplace les couleurs `neutral` et `accent` de QuickadUI (fonds ivoire en

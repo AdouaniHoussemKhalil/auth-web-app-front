@@ -4,6 +4,7 @@ import { Suspense, useEffect } from "react";
 import { HOME_PATH, LOGIN_PATH, notFoundPage as NotFoundPage, routes } from "@/app/routes";
 import { AppShell } from "@/components/AppShell";
 import { AuthLayout } from "@/components/AuthLayout";
+import { PublicLayout } from "@/components/PublicLayout";
 import { UserMenu, useAuth } from "@/features/auth";
 import { matchPath, navigate, usePath } from "@/lib/router";
 
@@ -41,7 +42,19 @@ export function App() {
     );
   }
 
-  // Route privée ou inconnue : session requise.
+  if (match?.route.access === "public" && status === "anonymous") {
+    const Page = match.route.page;
+    return (
+      <PublicLayout>
+        <Suspense fallback={<Loading label="Chargement de la page" />}>
+          <Page params={match.params ?? {}} />
+        </Suspense>
+      </PublicLayout>
+    );
+  }
+
+  // Route privée, publique avec session, ou inconnue : dans le shell (session requise).
+
   if (status === "anonymous") return <Redirect to={LOGIN_PATH} />;
 
   const Page = match?.route.page;
