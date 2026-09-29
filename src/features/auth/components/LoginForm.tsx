@@ -106,6 +106,12 @@ export function LoginForm() {
                   <PasswordInput {...field} autoComplete="current-password" />
                 </FormControl>
                 <FormMessage />
+                <Link
+                  to={email ? withQuery("/forgot-password", { email }) : "/forgot-password"}
+                  className="text-sm text-accent-11 underline-offset-4 hover:underline"
+                >
+                  Mot de passe oublié ?
+                </Link>
               </FormItem>
             )}
           />
