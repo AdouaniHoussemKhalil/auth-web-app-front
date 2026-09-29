@@ -1,5 +1,5 @@
 import { FormError } from "@/components/FormError";
-import { Button } from "@quickadui/core";
+import { Button } from "@/components/Button";
 import {
   Modal,
   ModalClose,

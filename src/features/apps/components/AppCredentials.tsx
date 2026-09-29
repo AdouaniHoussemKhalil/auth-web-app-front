@@ -1,11 +1,5 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-  Button,
-  CopyButton,
-  CopyField,
-} from "@quickadui/core";
+import { Alert, AlertDescription, AlertTitle, CopyButton, CopyField } from "@quickadui/core";
+import { Button } from "@/components/Button";
 import { Label } from "@quickadui/forms";
 import { Flex, Stack } from "@quickadui/layout";
 import { useState } from "react";

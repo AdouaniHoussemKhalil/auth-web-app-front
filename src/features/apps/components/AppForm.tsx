@@ -1,5 +1,6 @@
 import { FormError } from "@/components/FormError";
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@quickadui/core";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@quickadui/core";
+import { Button } from "@/components/Button";
 import {
   Form,
   FormControl,

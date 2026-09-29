@@ -3,7 +3,8 @@ import { PageHeader } from "@/components/PageHeader";
 import { EmptyState, ErrorState } from "@/components/StateMessages";
 import { APPS_PAGE_SIZE, AppsTable, useApps } from "@/features/apps";
 import { navigate, useQueryParam, withQuery } from "@/lib/router";
-import { Button, Card, CardContent, Skeleton } from "@quickadui/core";
+import { Card, CardContent, Skeleton } from "@quickadui/core";
+import { Button } from "@/components/Button";
 import { PlusIcon } from "@quickadui/icons";
 import { Stack } from "@quickadui/layout";
 

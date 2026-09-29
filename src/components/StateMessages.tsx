@@ -2,11 +2,11 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
-  Button,
   Card,
   CardContent,
   Typography,
 } from "@quickadui/core";
+import { Button } from "@/components/Button";
 import { Stack } from "@quickadui/layout";
 import type { ReactNode } from "react";
 

@@ -14,11 +14,29 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      // Charte graphique : les boutons passent par @/components/Button (couleurs noir/blanc).
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@quickadui/core",
+              importNames: ["Button", "IconButton"],
+              message: "Utiliser Button / IconButton de @/components/Button (charte graphique).",
+            },
+          ],
+        },
+      ],
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
     },
+  },
+  {
+    // Le composant de la charte habille ceux de QuickadUI : il est le seul à pouvoir les importer.
+    files: ["src/components/Button.tsx"],
+    rules: { "no-restricted-imports": "off" },
   },
   prettier,
 );

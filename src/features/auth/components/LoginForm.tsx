@@ -3,7 +3,7 @@ import { FormError } from "@/components/FormError";
 import { Link } from "@/components/Link";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { navigate, withQuery } from "@/lib/router";
-import { Button } from "@quickadui/core";
+import { Button } from "@/components/Button";
 import {
   Form,
   FormControl,
