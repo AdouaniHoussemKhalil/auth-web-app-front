@@ -3,6 +3,7 @@ import { Alert, AlertDescription, AlertTitle, Typography } from "@quickadui/core
 import { Stack } from "@quickadui/layout";
 import type { ReactNode } from "react";
 // Les exemples sont de vrais fichiers, testés : la page affiche exactement le code vérifié.
+import googleButtonCode from "../examples/GoogleButton.tsx?raw";
 import loginPageCode from "../examples/LoginPage.tsx?raw";
 import serverCode from "../examples/server.mjs?raw";
 import viteConfigCode from "../examples/vite.config.example.ts?raw";
@@ -124,7 +125,37 @@ AUTH_APP_SECRET=<x-app-secret de votre application>
         </Stack>
       </DocStep>
 
-      <DocStep number={7} title="Aller plus loin">
+      <DocStep number={7} title="Ajouter la connexion Google (optionnel)">
+        <Stack gap="xs" as="ol" className="list-decimal pl-5 text-neutral-11">
+          <li>
+            Dans Google Cloud Console (API et services → Identifiants), créez un ID client OAuth de
+            type <strong>Application Web</strong>. Dans « Origines JavaScript autorisées », ajoutez
+            l'URL de votre front (<C>http://localhost:5173</C> en développement).
+          </li>
+          <li>
+            Collez ce Client ID dans la carte « Connexion Google » de votre application ({appsLink})
+            : l'API vérifiera que chaque ID token a bien été émis pour lui.
+          </li>
+          <li>
+            Côté back, la route <C>/auth/google</C> de <C>server.mjs</C> relaie déjà l'ID token vers{" "}
+            <C>/consumers/auth/google</C>.
+          </li>
+          <li>
+            Côté front, chargez le script Google et affichez le bouton, avec le même Client ID dans{" "}
+            <C>VITE_GOOGLE_CLIENT_ID</C> :
+          </li>
+        </Stack>
+        <CodeBlock title="GoogleButton.tsx" code={googleButtonCode} />
+        <P>
+          Au premier passage, le compte est créé sans mot de passe, avec l'adresse déjà vérifiée par
+          Google (réponse <C>201</C>, <C>isNewUser: true</C>). Un compte existant avec la même
+          adresse est simplement reconnecté. Si l'utilisateur a activé la double authentification,
+          la réponse est <C>MFARequired: true</C> : envoyez ensuite le code reçu par e-mail sur{" "}
+          <C>/auth/login/mfa</C>, avec l'adresse Google, comme pour la connexion par mot de passe.
+        </P>
+      </DocStep>
+
+      <DocStep number={8} title="Aller plus loin">
         <Stack gap="xs" as="ul" className="list-disc pl-5 text-neutral-11">
           <li>
             <strong>Vérification d'e-mail</strong> : un code est envoyé à l'inscription (

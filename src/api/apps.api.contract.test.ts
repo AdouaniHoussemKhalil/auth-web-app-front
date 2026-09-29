@@ -7,6 +7,10 @@ import { appsApi } from "./apps.api";
 import { authApi } from "./auth.api";
 
 const baseUrl = process.env.API_CONTRACT_URL;
+// Le client HTTP vise API_CONTRACT_URL, jamais l'API de VITE_API_BASE_URL (souvent l'API de dev et sa vraie base).
+vi.mock("@/config/env", () => ({
+  env: { apiBaseUrl: (process.env.API_CONTRACT_URL ?? "").replace(/\/+$/, "") },
+}));
 const readCode = () =>
   execSync(process.env.API_CONTRACT_CODE_CMD ?? "", { encoding: "utf-8" }).trim();
 
@@ -37,6 +41,7 @@ describe.skipIf(!baseUrl)("Contrat apps.api avec l'API réelle", () => {
       supportEmail: "support@contrat.test",
       mfaVerificationMode: "link",
       requireEmailVerification: true,
+      googleClientId: "1234-contract.apps.googleusercontent.com",
     });
 
     const list = await appsApi.list(user.tenantId, 1, 10);
@@ -46,6 +51,10 @@ describe.skipIf(!baseUrl)("Contrat apps.api avec l'API réelle", () => {
     const app = await appsApi.get(user.tenantId, appId);
     expect(app.mfaSettings?.verificationMode).toBe("link");
     expect(app.requireEmailVerification).toBe(true);
+    expect(app.googleClientId).toBe("1234-contract.apps.googleusercontent.com");
+
+    await appsApi.setGoogleClientId(user.tenantId, appId, null);
+    expect((await appsApi.get(user.tenantId, appId)).googleClientId).toBeUndefined();
 
     await appsApi.setActive(user.tenantId, appId, false);
     expect((await appsApi.get(user.tenantId, appId)).isActive).toBe(false);

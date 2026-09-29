@@ -1,5 +1,5 @@
 import { Link } from "@/components/Link";
-import { AuthCard, RegisterForm } from "@/features/auth";
+import { AuthCard, GoogleSignIn, RegisterForm } from "@/features/auth";
 
 export default function RegisterPage() {
   return (
@@ -15,6 +15,7 @@ export default function RegisterPage() {
         </>
       }
     >
+      <GoogleSignIn text="signup_with" />
       <RegisterForm />
     </AuthCard>
   );

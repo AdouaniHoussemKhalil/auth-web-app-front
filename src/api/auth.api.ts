@@ -81,6 +81,14 @@ export const authApi = {
       () => undefined,
     ),
 
+  /** Connexion (ou inscription au premier passage) avec l'ID token renvoyé par le bouton Google. */
+  googleSignIn: (token: string): Promise<AuthenticatedResponse> =>
+    publicPost(
+      "/tenants/google-register",
+      { token },
+      tokenPairSchema.extend({ user: tenantUserSchema }),
+    ),
+
   refresh: (refreshToken: string): Promise<TokenPair> =>
     publicPost("/tenants/refresh", { refreshToken }, tokenPairSchema),
 

@@ -1,6 +1,7 @@
 // Vérifie que l'exemple React publié dans la documentation fonctionne tel qu'il est affiché.
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { GoogleButton } from "./GoogleButton";
 import { fetchProfile, LoginPage } from "./LoginPage";
 
 const respond = (status: number, body: unknown) =>
@@ -62,5 +63,80 @@ describe("Exemple React de la documentation", () => {
       email: "bob@test.com",
     });
     expect(fetchMock.mock.calls[0][1].headers).toEqual({ Authorization: "Bearer a" });
+  });
+});
+
+describe("Exemple du bouton Google de la documentation", () => {
+  // Faux script Google : garde le callback et affiche un bouton qui le déclenche.
+  const credential = `h.${btoa(JSON.stringify({ email: "gina@gmail.com" })).replace(/=+$/, "")}.s`;
+  const installGoogle = () => {
+    const initialize = vi.fn();
+    vi.stubGlobal("google", {
+      accounts: {
+        id: {
+          initialize,
+          renderButton: (parent: HTMLElement) => {
+            const button = document.createElement("button");
+            button.textContent = "Continuer avec Google";
+            button.onclick = () => initialize.mock.calls[0][0].callback({ credential });
+            parent.appendChild(button);
+          },
+        },
+      },
+    });
+    return initialize;
+  };
+
+  it("échange l'ID token Google contre une session via le back", async () => {
+    const initialize = installGoogle();
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(respond(201, { access_token: "a", refresh_token: "r", isNewUser: true }));
+    vi.stubGlobal("fetch", fetchMock);
+    const onLoggedIn = vi.fn();
+    render(
+      <GoogleButton
+        clientId="id.apps.googleusercontent.com"
+        onLoggedIn={onLoggedIn}
+        onMfaRequired={vi.fn()}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: "Continuer avec Google" }));
+
+    await waitFor(() =>
+      expect(onLoggedIn).toHaveBeenCalledWith({ accessToken: "a", refreshToken: "r" }),
+    );
+    expect(initialize.mock.calls[0][0].client_id).toBe("id.apps.googleusercontent.com");
+    expect(fetchMock.mock.calls[0][0]).toBe("/auth/google");
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ token: credential });
+  });
+
+  it("passe à l'étape du code quand le MFA est actif", async () => {
+    installGoogle();
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(respond(200, { MFARequired: true })));
+    const onMfaRequired = vi.fn();
+    render(<GoogleButton clientId="id" onLoggedIn={vi.fn()} onMfaRequired={onMfaRequired} />);
+
+    await userEvent.click(screen.getByRole("button", { name: "Continuer avec Google" }));
+
+    await waitFor(() => expect(onMfaRequired).toHaveBeenCalledWith("gina@gmail.com"));
+  });
+
+  it("affiche l'erreur de l'API", async () => {
+    installGoogle();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        respond(400, {
+          error: { code: "googleSignInDisabled", message: "Google sign-in is not configured" },
+        }),
+      ),
+    );
+    render(<GoogleButton clientId="id" onLoggedIn={vi.fn()} onMfaRequired={vi.fn()} />);
+
+    await userEvent.click(screen.getByRole("button", { name: "Continuer avec Google" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Google sign-in is not configured");
   });
 });

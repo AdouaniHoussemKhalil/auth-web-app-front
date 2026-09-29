@@ -15,6 +15,7 @@ export const appClientSchema = z.object({
   refreshTokenExpiresIn: z.string().optional(),
   resetTokenExpiresIn: z.string().optional(),
   requireEmailVerification: z.boolean().optional(),
+  googleClientId: z.string().optional(),
   mfaSettings: z
     .object({ verificationMode: z.enum(["code", "link"]), expiryMinutes: z.number() })
     .partial()
@@ -55,6 +56,7 @@ export interface CreateAppBody {
   mfaVerificationMode?: "code" | "link" | undefined;
   mfaExpiresIn?: string | undefined;
   requireEmailVerification?: boolean | undefined;
+  googleClientId?: string | undefined;
 }
 
 const base = (tenantId: string) => `/config/apps/${encodeURIComponent(tenantId)}`;
@@ -79,6 +81,13 @@ export const appsApi = {
     http<unknown>(
       `/config/apps/update/${encodeURIComponent(tenantId)}/${encodeURIComponent(appId)}`,
       { method: "PUT", body: { isActive } },
+    ),
+
+  /** Client ID Google des utilisateurs de l'application ; null désactive la connexion Google. */
+  setGoogleClientId: (tenantId: string, appId: string, googleClientId: string | null) =>
+    http<unknown>(
+      `/config/apps/update/${encodeURIComponent(tenantId)}/${encodeURIComponent(appId)}`,
+      { method: "PUT", body: { googleClientId } },
     ),
 
   /** Nouveau secret ; les sessions des consumers de l'application sont révoquées par l'API. */
