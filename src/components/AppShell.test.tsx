@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@quickadui/core";
 import { ThemeProvider } from "@quickadui/theme";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -19,10 +20,12 @@ describe("isNavItemActive", () => {
 describe("AppShell", () => {
   const renderShell = (path: string) =>
     render(
-      <ThemeProvider>
-        <AppShell path={path}>
-          <p>Contenu</p>
-        </AppShell>
+      <ThemeProvider defaultTheme="light">
+        <TooltipProvider>
+          <AppShell path={path}>
+            <p>Contenu</p>
+          </AppShell>
+        </TooltipProvider>
       </ThemeProvider>,
     );
 
@@ -39,13 +42,16 @@ describe("AppShell", () => {
     );
   });
 
-  it("fait tourner le thème clair → sombre → système", async () => {
+  it("fait tourner le thème clair → sombre → système avec un bouton-icône", async () => {
     renderShell("/");
     const toggle = () => screen.getByRole("button", { name: /^Thème/ });
 
-    const before = toggle().textContent;
+    expect(toggle()).toHaveAccessibleName("Thème clair (passer en sombre)");
     await userEvent.click(toggle());
-
-    expect(toggle().textContent).not.toBe(before);
+    expect(toggle()).toHaveAccessibleName("Thème sombre (passer en système)");
+    await userEvent.click(toggle());
+    expect(toggle()).toHaveAccessibleName("Thème système (passer en clair)");
+    // Icône seule : pas de texte visible dans le bouton.
+    expect(toggle()).toHaveTextContent("");
   });
 });
