@@ -156,6 +156,22 @@ export function AppForm({ isSubmitting, error, onSubmit, onCancel }: AppFormProp
 
           <Card>
             <CardHeader>
+              <CardTitle>Connexion Google (optionnel)</CardTitle>
+              <CardDescription>
+                Permet aux utilisateurs de l'application de se connecter avec leur compte Google.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {textField("googleClientId", "Client ID Google", {
+                placeholder: "1234-abcd.apps.googleusercontent.com",
+                description:
+                  "Le Client ID OAuth « Application Web » de votre projet Google Cloud, celui utilisé par le bouton Google de votre front.",
+              })}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle>Apparence des e-mails (optionnel)</CardTitle>
             </CardHeader>
             <CardContent>

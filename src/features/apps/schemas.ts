@@ -7,6 +7,15 @@ const duration = z
   .regex(/^\d+\s?(s|m|h|d)$/, "Format attendu : 15m, 1h, 7d…")
   .or(z.literal(""));
 
+/** Client ID OAuth Google d'une application web. */
+export const googleClientIdSchema = z
+  .string()
+  .trim()
+  .regex(
+    /^[\w-]+\.apps\.googleusercontent\.com$/,
+    "Client ID Google attendu : …apps.googleusercontent.com",
+  );
+
 const optionalUrl = z.string().trim().url("URL invalide (https://…)").or(z.literal(""));
 
 export const createAppSchema = z.object({
@@ -26,6 +35,7 @@ export const createAppSchema = z.object({
   mfaVerificationMode: z.enum(["code", "link"]),
   mfaExpiresIn: duration,
   requireEmailVerification: z.boolean(),
+  googleClientId: googleClientIdSchema.or(z.literal("")),
 });
 
 export type CreateAppValues = z.infer<typeof createAppSchema>;
@@ -43,6 +53,7 @@ export const createAppDefaults: CreateAppValues = {
   mfaVerificationMode: "code",
   mfaExpiresIn: "15m",
   requireEmailVerification: false,
+  googleClientId: "",
 };
 
 /** Retire les champs optionnels vides : l'API applique alors ses valeurs par défaut. */

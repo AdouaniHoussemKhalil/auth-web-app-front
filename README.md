@@ -31,11 +31,16 @@ La CI GitHub Actions exécute audit, typecheck, lint, format, tests et build sur
 
 ## Configuration
 
-| Variable            | Défaut                  | Rôle                           |
-| ------------------- | ----------------------- | ------------------------------ |
-| `VITE_API_BASE_URL` | `http://localhost:8080` | URL de l'API, sans slash final |
+| Variable                | Défaut                  | Rôle                                                       |
+| ----------------------- | ----------------------- | ---------------------------------------------------------- |
+| `VITE_API_BASE_URL`     | `http://localhost:8080` | URL de l'API, sans slash final                             |
+| `VITE_GOOGLE_CLIENT_ID` | —                       | Client ID OAuth Google : affiche « Continuer avec Google » |
 
 Les variables sont lues uniquement dans `src/config/env.ts`.
+
+**Connexion Google** : `VITE_GOOGLE_CLIENT_ID` doit être le même Client ID que `google.clientId` de l'API (sinon l'API
+répond `invalidGoogleToken`). Dans Google Cloud Console, ce Client ID « Application Web » doit autoriser l'origine du
+dashboard (`http://localhost:5173` en développement) dans « Origines JavaScript autorisées ».
 
 ## Architecture
 
@@ -70,6 +75,7 @@ Règles :
 | Inscription         | `#/register`                  | Aucune session ouverte : redirection vers la vérification de l'e-mail                                |
 | Vérification        | `#/verify-email?email=...`    | Code à 6 chiffres reçu par e-mail → session ouverte ; renvoi possible                                |
 | Connexion           | `#/login`                     | Mot de passe → code MFA reçu par e-mail → session ouverte                                            |
+| Google              | `#/login`, `#/register`       | « Continuer avec Google » → session ouverte (compte créé au premier passage)                         |
 | Mot de passe oublié | `#/forgot-password?email=...` | E-mail → code reçu → nouveau mot de passe (toutes les sessions sont fermées) → retour à la connexion |
 
 - Les pages privées redirigent vers `#/login` sans session ; les pages de connexion redirigent vers `#/` avec une session.
@@ -87,7 +93,7 @@ Règles :
 | ------------ | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Liste        | `#/apps?page=1`                | Applications du tenant, paginées (page dans l'URL) ; jamais de secret affiché                                                                                     |
 | Création     | `#/apps/new`                   | Informations obligatoires, puis réglages de sécurité pré-remplis (durées, mode MFA, vérification e-mail) et apparence des e-mails                                 |
-| Détail       | `#/apps/:appId`                | Identifiants `x-app-id` / `x-app-secret` (secret masqué, copiable), activation, rotation du secret avec confirmation, configuration                               |
+| Détail       | `#/apps/:appId`                | Identifiants (secret masqué, copiable), Client ID Google des utilisateurs, activation, rotation du secret, configuration                                          |
 | Utilisateurs | `#/apps/:appId/users?q=&page=` | Comptes de l'application : recherche par e-mail, statut, Google / MFA / e-mail non vérifié, détail, blocage (ferme ses sessions) et suppression avec confirmation |
 
 Chaque vue gère les états chargement, erreur (avec « Réessayer »), vide et données.

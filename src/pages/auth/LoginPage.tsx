@@ -1,5 +1,5 @@
 import { Link } from "@/components/Link";
-import { AuthCard, LoginForm } from "@/features/auth";
+import { AuthCard, GoogleSignIn, LoginForm } from "@/features/auth";
 
 export default function LoginPage() {
   return (
@@ -19,6 +19,7 @@ export default function LoginPage() {
         </>
       }
     >
+      <GoogleSignIn text="signin_with" />
       <LoginForm />
     </AuthCard>
   );

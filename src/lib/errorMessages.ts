@@ -5,6 +5,8 @@ const MESSAGES: Record<string, string> = {
   networkError: "Impossible de joindre le serveur. Vérifiez votre connexion.",
   invalidCredentials: "E-mail ou mot de passe incorrect.",
   useGoogleSignIn: "Ce compte utilise la connexion Google.",
+  invalidGoogleToken: "La connexion Google a échoué. Réessayez.",
+  googleEmailNotVerified: "Votre adresse Google n'est pas vérifiée.",
   UserBlocked: "Ce compte est désactivé.",
   emailNotVerified: "Votre adresse e-mail n'est pas encore vérifiée.",
   userAlreadyExists: "Un compte existe déjà avec cette adresse e-mail.",

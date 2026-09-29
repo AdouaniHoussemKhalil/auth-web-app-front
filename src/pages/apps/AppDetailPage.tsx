@@ -5,6 +5,7 @@ import { ErrorState } from "@/components/StateMessages";
 import {
   AppCredentials,
   AppStatusBadge,
+  GoogleClientIdForm,
   RotateSecretDialog,
   useApp,
   useAppActions,
@@ -35,7 +36,7 @@ const Setting = ({ label, value }: { label: string; value: string | undefined })
 export default function AppDetailPage({ params }: { params: Record<string, string> }) {
   const appId = params.appId ?? "";
   const { data: app, isLoading, error, reload, setData } = useApp(appId);
-  const { setActive, rotateSecret } = useAppActions();
+  const { setActive, setGoogleClientId, rotateSecret } = useAppActions();
 
   if (error) return <ErrorState message={error} onRetry={reload} />;
   if (isLoading || !app) {
@@ -52,6 +53,17 @@ export default function AppDetailPage({ params }: { params: Record<string, strin
     if (done === undefined) return;
     setData({ ...app, isActive });
     toast({ title: isActive ? "Application activée" : "Application désactivée" });
+  };
+
+  const saveGoogleClientId = async (googleClientId: string | null) => {
+    const done = await setGoogleClientId.run(app.id, googleClientId);
+    if (done === undefined) return false;
+    setData({ ...app, googleClientId: googleClientId ?? undefined });
+    toast({
+      title: googleClientId ? "Connexion Google activée" : "Connexion Google désactivée",
+      variant: "success",
+    });
+    return true;
   };
 
   const rotate = async () => {
@@ -110,6 +122,26 @@ export default function AppDetailPage({ params }: { params: Record<string, strin
             >
               Gérer les utilisateurs
             </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Connexion Google</CardTitle>
+            <CardDescription>
+              {app.googleClientId
+                ? "Les utilisateurs peuvent se connecter avec Google (route /consumers/auth/google)."
+                : "Désactivée. Renseignez le Client ID Google de votre application pour l'activer."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <GoogleClientIdForm
+              key={app.googleClientId ?? ""}
+              value={app.googleClientId}
+              isPending={setGoogleClientId.isPending}
+              error={setGoogleClientId.error}
+              onSave={saveGoogleClientId}
+            />
           </CardContent>
         </Card>
 

@@ -23,9 +23,17 @@ export const useAppActions = () => {
     ),
   );
 
+  const setGoogleClientId = useAsyncAction(
+    useCallback(
+      (appId: string, googleClientId: string | null) =>
+        appsApi.setGoogleClientId(tenantId, appId, googleClientId),
+      [tenantId],
+    ),
+  );
+
   const rotateSecret = useAsyncAction(
     useCallback((appId: string) => appsApi.rotateSecret(tenantId, appId), [tenantId]),
   );
 
-  return { create, setActive, rotateSecret };
+  return { create, setActive, setGoogleClientId, rotateSecret };
 };

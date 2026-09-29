@@ -33,6 +33,7 @@ app.post("/auth/register", relay("/register")); // { firstName, lastName, email,
 app.post("/auth/verify-email", relay("/verifyEmail")); // { email, code }
 app.post("/auth/login", relay("/login")); // { email, password } -> tokens, ou { MFARequired: true }
 app.post("/auth/login/mfa", relay("/loginByMFA")); // { email, mfaCode } -> tokens
+app.post("/auth/google", relay("/google")); // { token } (ID token Google) -> tokens, ou { MFARequired: true }
 app.post("/auth/refresh", relay("/refresh")); // { refreshToken } -> nouvelle paire de tokens
 app.post("/auth/logout", relay("/logout")); // { refreshToken }
 

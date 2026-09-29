@@ -41,6 +41,7 @@ describe.skipIf(!baseUrl)("Contrat apps.api avec l'API réelle", () => {
       supportEmail: "support@contrat.test",
       mfaVerificationMode: "link",
       requireEmailVerification: true,
+      googleClientId: "1234-contract.apps.googleusercontent.com",
     });
 
     const list = await appsApi.list(user.tenantId, 1, 10);
@@ -50,6 +51,10 @@ describe.skipIf(!baseUrl)("Contrat apps.api avec l'API réelle", () => {
     const app = await appsApi.get(user.tenantId, appId);
     expect(app.mfaSettings?.verificationMode).toBe("link");
     expect(app.requireEmailVerification).toBe(true);
+    expect(app.googleClientId).toBe("1234-contract.apps.googleusercontent.com");
+
+    await appsApi.setGoogleClientId(user.tenantId, appId, null);
+    expect((await appsApi.get(user.tenantId, appId)).googleClientId).toBeUndefined();
 
     await appsApi.setActive(user.tenantId, appId, false);
     expect((await appsApi.get(user.tenantId, appId)).isActive).toBe(false);
