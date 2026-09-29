@@ -18,6 +18,7 @@ import {
 import { Grid, Stack } from "@quickadui/layout";
 import { useCallback } from "react";
 import { passwordRules, registerSchema, type RegisterValues } from "../schemas";
+import { GoogleSignIn } from "./GoogleSignIn";
 
 /** Inscription : aucune session n'est ouverte, l'utilisateur est envoyé vers la vérification de son e-mail. */
 export function RegisterForm() {
@@ -115,6 +116,7 @@ export function RegisterForm() {
           </Button>
         </Stack>
       </form>
+      <GoogleSignIn />
     </Form>
   );
 }

@@ -10,17 +10,16 @@ import { useTheme } from "@quickadui/theme";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
-export interface GoogleSignInProps {
-  /** Libellé du bouton Google : « Se connecter avec Google » ou « S'inscrire avec Google ». */
-  text: "signin_with" | "signup_with";
-}
+// Largeurs acceptées par le bouton Google (en pixels).
+const MIN_WIDTH = 200;
+const MAX_WIDTH = 400;
 
 /**
- * Bouton « Continuer avec Google » suivi d'un séparateur « ou ». Google renvoie un ID token, échangé
- * auprès de l'API contre une session (le compte est créé au premier passage, e-mail déjà vérifié).
- * Rien n'est affiché si VITE_GOOGLE_CLIENT_ID n'est pas défini.
+ * Séparateur « ou » puis bouton « Continuer avec Google », à placer sous le bouton principal d'un
+ * formulaire. Google renvoie un ID token, échangé auprès de l'API contre une session (le compte est
+ * créé au premier passage, e-mail déjà vérifié). Rien n'est affiché si VITE_GOOGLE_CLIENT_ID n'est pas défini.
  */
-export function GoogleSignIn({ text }: GoogleSignInProps) {
+export function GoogleSignIn() {
   const clientId = env.googleClientId;
   const { openSession } = useAuth();
   const { resolvedTheme } = useTheme();
@@ -56,10 +55,11 @@ export function GoogleSignIn({ text }: GoogleSignInProps) {
         parent.replaceChildren();
         google.renderButton(parent, {
           theme: resolvedTheme === "dark" ? "filled_black" : "outline",
-          text,
+          text: "continue_with",
           size: "large",
-          shape: "pill",
-          width: Math.min(400, parent.offsetWidth || 320),
+          shape: "rectangular",
+          // Même largeur que le bouton principal du formulaire, dans les limites de Google.
+          width: Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, parent.offsetWidth || MAX_WIDTH)),
           locale: "fr",
         });
       },
@@ -70,24 +70,12 @@ export function GoogleSignIn({ text }: GoogleSignInProps) {
     return () => {
       cancelled = true;
     };
-  }, [clientId, resolvedTheme, text]);
+  }, [clientId, resolvedTheme]);
 
   if (!clientId) return null;
 
   return (
-    <Stack gap="md" className="mb-6">
-      {unavailable ? (
-        <Typography variant="muted" role="status">
-          La connexion Google est indisponible pour le moment.
-        </Typography>
-      ) : (
-        <div
-          ref={container}
-          className="flex min-h-10 justify-center"
-          aria-busy={signIn.isPending}
-        />
-      )}
-      <FormError>{signIn.error}</FormError>
+    <Stack gap="md" className="mt-4">
       <Flex align="center" gap="sm" aria-hidden="true">
         <span className="h-px flex-1 bg-neutral-6" />
         <Typography variant="small" className="text-neutral-11">
@@ -95,6 +83,18 @@ export function GoogleSignIn({ text }: GoogleSignInProps) {
         </Typography>
         <span className="h-px flex-1 bg-neutral-6" />
       </Flex>
+      {unavailable ? (
+        <Typography variant="muted" role="status" className="text-center">
+          La connexion Google est indisponible pour le moment.
+        </Typography>
+      ) : (
+        <div
+          ref={container}
+          className="flex min-h-10 w-full justify-center"
+          aria-busy={signIn.isPending}
+        />
+      )}
+      <FormError>{signIn.error}</FormError>
     </Stack>
   );
 }

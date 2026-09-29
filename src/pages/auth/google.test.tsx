@@ -22,8 +22,7 @@ const fakeGoogle = () => {
     }),
     renderButton: vi.fn((parent, options) => {
       const button = document.createElement("button");
-      button.textContent =
-        options.text === "signup_with" ? "S'inscrire avec Google" : "Se connecter avec Google";
+      button.textContent = options.text === "continue_with" ? "Continuer avec Google" : "?";
       button.onclick = () => callback({ credential: "google-id-token" });
       parent.appendChild(button);
     }),
@@ -61,7 +60,7 @@ describe("Connexion Google du dashboard", () => {
     });
     await renderAt("#/login");
 
-    await userEvent.click(await screen.findByRole("button", { name: "Se connecter avec Google" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Continuer avec Google" }));
 
     await waitFor(() => expect(window.location.hash).toBe("#/"));
     expect(calls.find(({ route }) => route === "POST /tenants/google-register")?.body).toEqual({
@@ -73,15 +72,42 @@ describe("Connexion Google du dashboard", () => {
     );
   });
 
-  it("propose l'inscription avec Google", async () => {
+  it("place le bouton Google sous le bouton principal, séparé par « ou »", async () => {
+    fakeGoogle();
+    mockApi({});
+    await renderAt("#/login");
+
+    const google = await screen.findByRole("button", { name: "Continuer avec Google" });
+    const submit = screen.getByRole("button", { name: "Continuer" });
+    const separator = screen.getByText("ou");
+    const follows = (a: Element, b: Element) =>
+      Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(follows(submit, separator) && follows(separator, google)).toBe(true);
+  });
+
+  it("propose Google sous « Créer mon compte »", async () => {
     fakeGoogle();
     mockApi({});
     await renderAt("#/register");
 
-    expect(
-      await screen.findByRole("button", { name: "S'inscrire avec Google" }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("ou")).toBeInTheDocument();
+    const google = await screen.findByRole("button", { name: "Continuer avec Google" });
+    const submit = screen.getByRole("button", { name: "Créer mon compte" });
+    expect(submit.compareDocumentPosition(google) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it("masque Google à l'étape du code de connexion", async () => {
+    fakeGoogle();
+    mockApi({ "POST /tenants/login": () => [200, { MFARequired: true, isSuccess: true }] });
+    await renderAt("#/login");
+    const user = userEvent.setup();
+
+    await screen.findByRole("button", { name: "Continuer avec Google" });
+    await user.type(screen.getByLabelText("Adresse e-mail"), "alice@test.com");
+    await user.type(screen.getByLabelText("Mot de passe"), "Password1!");
+    await user.click(screen.getByRole("button", { name: "Continuer" }));
+
+    expect(await screen.findByLabelText("Code reçu par e-mail")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Continuer avec Google" })).not.toBeInTheDocument();
   });
 
   it("affiche l'erreur de l'API", async () => {
@@ -89,7 +115,7 @@ describe("Connexion Google du dashboard", () => {
     mockApi({ "POST /tenants/google-register": () => apiError(401, "invalidGoogleToken") });
     await renderAt("#/login");
 
-    await userEvent.click(await screen.findByRole("button", { name: "Se connecter avec Google" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Continuer avec Google" }));
 
     expect(await screen.findByText("La connexion Google a échoué. Réessayez.")).toBeInTheDocument();
     expect(window.location.hash).toBe("#/login");

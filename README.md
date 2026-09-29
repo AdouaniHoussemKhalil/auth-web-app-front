@@ -105,7 +105,7 @@ Après l'enregistrement, la session est mise à jour : le nouveau nom apparaît 
 
 ## Documentation « Comment commencer »
 
-`#/docs` (barre latérale, et lien sur la page de connexion) : guide pas à pas pour brancher l'authentification sur une
+`#/docs` (barre latérale) : guide pas à pas pour brancher l'authentification sur une
 application Node + React. La page est publique : lisible sans compte, dans le dashboard une fois connecté.
 
 - Le contenu vit dans `src/features/docs`, qui ne dépend d'aucune autre feature : il pourra être extrait vers un site

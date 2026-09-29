@@ -21,6 +21,7 @@ import { useCallback, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { loginSchema, type LoginValues } from "../schemas";
 import { CodeForm } from "./CodeForm";
+import { GoogleSignIn } from "./GoogleSignIn";
 
 /**
  * Connexion en deux étapes : mot de passe (l'API envoie un code par e-mail), puis code MFA.
@@ -120,6 +121,7 @@ export function LoginForm() {
           </Button>
         </Stack>
       </form>
+      <GoogleSignIn />
     </Form>
   );
 }

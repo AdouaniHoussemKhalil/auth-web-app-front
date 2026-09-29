@@ -8,7 +8,7 @@ export interface GoogleButtonOptions {
   theme: "outline" | "filled_black";
   text: "signin_with" | "signup_with" | "continue_with";
   size: "large";
-  shape: "pill";
+  shape: "pill" | "rectangular";
   width: number;
   locale: string;
 }
