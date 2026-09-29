@@ -7,6 +7,10 @@ import { appsApi } from "./apps.api";
 import { authApi } from "./auth.api";
 
 const baseUrl = process.env.API_CONTRACT_URL;
+// Le client HTTP vise API_CONTRACT_URL, jamais l'API de VITE_API_BASE_URL (souvent l'API de dev et sa vraie base).
+vi.mock("@/config/env", () => ({
+  env: { apiBaseUrl: (process.env.API_CONTRACT_URL ?? "").replace(/\/+$/, "") },
+}));
 const readCode = () =>
   execSync(process.env.API_CONTRACT_CODE_CMD ?? "", { encoding: "utf-8" }).trim();
 
