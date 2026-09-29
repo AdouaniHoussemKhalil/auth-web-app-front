@@ -2,7 +2,7 @@ import { authApi } from "@/api/auth.api";
 import { FormError } from "@/components/FormError";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { navigate } from "@/lib/router";
-import { Button } from "@quickadui/core";
+import { Button } from "@/components/Button";
 import {
   Form,
   FormControl,

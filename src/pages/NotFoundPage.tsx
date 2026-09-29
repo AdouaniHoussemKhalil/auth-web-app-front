@@ -1,4 +1,5 @@
-import { Button, Typography } from "@quickadui/core";
+import { Typography } from "@quickadui/core";
+import { Button } from "@/components/Button";
 import { Stack } from "@quickadui/layout";
 
 export default function NotFoundPage() {

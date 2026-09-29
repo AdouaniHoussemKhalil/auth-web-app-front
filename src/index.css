@@ -2,6 +2,8 @@
 @import "@quickadui/theme/tokens.css";
 @import "@quickadui/theme/tailwind-theme.css";
 @import "@quickadui/theme/scrollbar.css";
+/* Charte graphique : remplace les couleurs neutral et accent de QuickadUI. */
+@import "./styles/brand.css";
 
 /* Chemins relatifs à ce fichier : src/ -> ../node_modules */
 @source "../node_modules/@quickadui/primitives";

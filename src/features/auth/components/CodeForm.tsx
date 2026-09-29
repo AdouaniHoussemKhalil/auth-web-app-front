@@ -1,4 +1,4 @@
-import { Button } from "@quickadui/core";
+import { Button } from "@/components/Button";
 import {
   Form,
   FormControl,
