@@ -85,4 +85,10 @@ export const authApi = {
     publicPost("/tenants/refresh", { refreshToken }, tokenPairSchema),
 
   logout: (refreshToken: string) => publicPost("/tenants/logout", { refreshToken }, z.unknown()),
+
+  /** Modifie le prénom et le nom du tenant connecté ; renvoie le profil à jour. */
+  updateProfile: (tenantId: string, body: { firstName: string; lastName: string }) =>
+    http<unknown>(`/tenants/${encodeURIComponent(tenantId)}`, { method: "PUT", body }).then(
+      (data) => z.object({ user: tenantUserSchema }).parse(data).user,
+    ),
 };

@@ -57,6 +57,13 @@ export const sessionStore = {
     notify();
   },
 
+  /** Met à jour l'identité affichée (après une modification du profil), sans toucher aux tokens. */
+  updateUser: (user: TenantUser) => {
+    if (!stored) return;
+    persist({ ...stored, user });
+    notify();
+  },
+
   clear: () => {
     accessToken = null;
     persist(null);

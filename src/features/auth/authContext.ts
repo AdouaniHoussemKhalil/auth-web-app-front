@@ -9,6 +9,8 @@ export interface AuthContextValue {
   /** Ouvre la session après une vérification d'e-mail ou un code MFA valide. */
   openSession: (response: AuthenticatedResponse) => void;
   logout: () => Promise<void>;
+  /** Remplace l'identité affichée (après une modification du profil). */
+  updateUser: (user: TenantUser) => void;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

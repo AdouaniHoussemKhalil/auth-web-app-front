@@ -91,6 +91,18 @@ Règles :
 
 Chaque vue gère les états chargement, erreur (avec « Réessayer »), vide et données.
 
+## Profil
+
+`#/profile` (menu utilisateur → « Mon profil ») : prénom et nom modifiables (règles de l'API), e-mail en lecture seule.
+Après l'enregistrement, la session est mise à jour : le nouveau nom apparaît aussitôt dans le menu, sans reconnexion.
+
+## Charte graphique
+
+- Palette dans `src/styles/brand.css` : elle remplace les couleurs `neutral` et `accent` de QuickadUI (fonds ivoire en
+  clair, brun chaud en sombre, accent orange doux).
+- Boutons : toujours `Button` / `IconButton` de `@/components/Button` (principal noir en clair, blanc en sombre ;
+  secondaires neutres). Une règle ESLint interdit d'importer ceux de `@quickadui/core` directement.
+
 ## Test de contrat avec l'API réelle
 
 `src/api/*.contract.test.ts` (auth et applications) vérifie que les réponses de la vraie API correspondent aux schémas du front. Ignoré par

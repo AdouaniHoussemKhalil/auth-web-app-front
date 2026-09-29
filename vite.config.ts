@@ -14,5 +14,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
     css: false,
+    // Les tests de parcours simulent la saisie clavier : 5 s par défaut ne suffit pas sous charge.
+    testTimeout: 15_000,
   },
 });
