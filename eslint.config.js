@@ -34,6 +34,14 @@ export default tseslint.config(
     },
   },
   {
+    // Exemples de la documentation : code destiné à VOTRE application (Node / React), hors de ce projet.
+    files: ["src/features/docs/examples/**"],
+    languageOptions: {
+      globals: { process: "readonly", Buffer: "readonly", console: "readonly", fetch: "readonly" },
+    },
+    rules: { "no-restricted-imports": "off", "react-refresh/only-export-components": "off" },
+  },
+  {
     // Le composant de la charte habille ceux de QuickadUI : il est le seul à pouvoir les importer.
     files: ["src/components/Button.tsx"],
     rules: { "no-restricted-imports": "off" },

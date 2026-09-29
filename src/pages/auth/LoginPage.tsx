@@ -12,6 +12,10 @@ export default function LoginPage() {
           <Link to="/register" className="text-accent-11 underline-offset-4 hover:underline">
             Créer un compte
           </Link>
+          &nbsp;·&nbsp;
+          <Link to="/docs" className="text-accent-11 underline-offset-4 hover:underline">
+            Comment commencer
+          </Link>
         </>
       }
     >
