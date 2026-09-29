@@ -52,6 +52,17 @@ export const loginSchema = z.object({
 
 export const codeSchema = z.object({ code });
 
+export const emailSchema = z.object({ email });
+
+export const newPasswordSchema = z
+  .object({ password: passwordSchema, confirmPassword: z.string() })
+  .refine((values) => values.password === values.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas",
+    path: ["confirmPassword"],
+  });
+
 export type RegisterValues = z.infer<typeof registerSchema>;
 export type LoginValues = z.infer<typeof loginSchema>;
 export type CodeValues = z.infer<typeof codeSchema>;
+export type EmailValues = z.infer<typeof emailSchema>;
+export type NewPasswordValues = z.infer<typeof newPasswordSchema>;

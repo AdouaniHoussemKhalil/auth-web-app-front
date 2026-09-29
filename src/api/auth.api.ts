@@ -59,6 +59,28 @@ export const authApi = {
       tokenPairSchema.extend({ result: tenantUserSchema }),
     ).then(({ result, ...tokens }) => ({ ...tokens, user: result })),
 
+  /** Envoie un code de réinitialisation ; même réponse que le compte existe ou non. */
+  forgotPassword: (email: string) => publicPost("/tenants/forgotPassword", { email }, z.unknown()),
+
+  /** Échange le code reçu par e-mail contre un jeton de réinitialisation à usage unique. */
+  verifyResetCode: (email: string, resetCode: string) =>
+    publicPost(
+      "/tenants/verifyResetCode",
+      { email, resetCode },
+      z.object({ resetToken: z.string() }),
+    ),
+
+  /** Nouveau mot de passe ; l'API ferme toutes les sessions du tenant. */
+  resetPassword: (body: {
+    email: string;
+    resetToken: string;
+    password: string;
+    confirmPassword: string;
+  }) =>
+    http<unknown>("/tenants/resetPassword", { method: "PUT", body, auth: false }).then(
+      () => undefined,
+    ),
+
   refresh: (refreshToken: string): Promise<TokenPair> =>
     publicPost("/tenants/refresh", { refreshToken }, tokenPairSchema),
 

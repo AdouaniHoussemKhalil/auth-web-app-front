@@ -65,11 +65,12 @@ Règles :
 
 ## Authentification
 
-| Page         | Route                      | Parcours                                                              |
-| ------------ | -------------------------- | --------------------------------------------------------------------- |
-| Inscription  | `#/register`               | Aucune session ouverte : redirection vers la vérification de l'e-mail |
-| Vérification | `#/verify-email?email=...` | Code à 6 chiffres reçu par e-mail → session ouverte ; renvoi possible |
-| Connexion    | `#/login`                  | Mot de passe → code MFA reçu par e-mail → session ouverte             |
+| Page                | Route                         | Parcours                                                                                             |
+| ------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Inscription         | `#/register`                  | Aucune session ouverte : redirection vers la vérification de l'e-mail                                |
+| Vérification        | `#/verify-email?email=...`    | Code à 6 chiffres reçu par e-mail → session ouverte ; renvoi possible                                |
+| Connexion           | `#/login`                     | Mot de passe → code MFA reçu par e-mail → session ouverte                                            |
+| Mot de passe oublié | `#/forgot-password?email=...` | E-mail → code reçu → nouveau mot de passe (toutes les sessions sont fermées) → retour à la connexion |
 
 - Les pages privées redirigent vers `#/login` sans session ; les pages de connexion redirigent vers `#/` avec une session.
 - **Session** : l'access token reste en mémoire ; le refresh token et l'identité du tenant sont en `localStorage` pour

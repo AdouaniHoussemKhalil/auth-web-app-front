@@ -9,6 +9,7 @@ const MESSAGES: Record<string, string> = {
   emailNotVerified: "Votre adresse e-mail n'est pas encore vérifiée.",
   userAlreadyExists: "Un compte existe déjà avec cette adresse e-mail.",
   passwordMismatch: "Les mots de passe ne correspondent pas.",
+  passwordsDoNotMatch: "Les mots de passe ne correspondent pas.",
   invalidCode: "Code incorrect.",
   expiredCode: "Ce code a expiré. Demandez-en un nouveau.",
   noPendingCode: "Aucun code en attente. Demandez-en un nouveau.",

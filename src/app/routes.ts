@@ -16,6 +16,11 @@ export const routes: RouteDefinition[] = [
   { path: "/login", access: "guest", page: lazy(() => import("@/pages/auth/LoginPage")) },
   { path: "/register", access: "guest", page: lazy(() => import("@/pages/auth/RegisterPage")) },
   {
+    path: "/forgot-password",
+    access: "guest",
+    page: lazy(() => import("@/pages/auth/ForgotPasswordPage")),
+  },
+  {
     path: "/verify-email",
     access: "guest",
     page: lazy(() => import("@/pages/auth/VerifyEmailPage")),
