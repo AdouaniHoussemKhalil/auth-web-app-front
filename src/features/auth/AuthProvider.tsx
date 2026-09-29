@@ -48,6 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       openSession,
       logout: sessionStore.logout,
+      updateUser: sessionStore.updateUser,
     }),
     [restoring, user, openSession],
   );

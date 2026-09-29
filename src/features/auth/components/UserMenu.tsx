@@ -44,6 +44,7 @@ export function UserMenu() {
           <div className="text-xs font-normal text-neutral-11">{user.email}</div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={() => navigate("/profile")}>Mon profil</DropdownMenuItem>
         <DropdownMenuItem
           onSelect={() => {
             void logout().then(() => navigate("/login", { replace: true }));
