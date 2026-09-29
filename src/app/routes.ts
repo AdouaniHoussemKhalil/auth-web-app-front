@@ -21,6 +21,14 @@ export const routes: RouteDefinition[] = [
     page: lazy(() => import("@/pages/auth/VerifyEmailPage")),
   },
   { path: "/", access: "private", page: lazy(() => import("@/pages/HomePage")) },
+  { path: "/apps", access: "private", page: lazy(() => import("@/pages/apps/AppsListPage")) },
+  // "/apps/new" avant "/apps/:appId", sinon "new" serait pris pour un identifiant.
+  { path: "/apps/new", access: "private", page: lazy(() => import("@/pages/apps/AppCreatePage")) },
+  {
+    path: "/apps/:appId",
+    access: "private",
+    page: lazy(() => import("@/pages/apps/AppDetailPage")),
+  },
 ];
 
 export const notFoundPage = lazy(() => import("@/pages/NotFoundPage"));
