@@ -14,6 +14,18 @@ const subscribe = (callback: () => void) => {
   return () => window.removeEventListener("hashchange", callback);
 };
 
+const readQuery = () => window.location.hash.split("?")[1] ?? "";
+
+/** Paramètre de la query string du hash (`#/verify-email?email=a@b.c` -> "a@b.c"), réactif. */
+export const useQueryParam = (name: string) => {
+  const query = useSyncExternalStore(subscribe, readQuery, () => "");
+  return new URLSearchParams(query).get(name);
+};
+
+/** Construit un chemin avec query string : `withQuery("/verify-email", { email })`. */
+export const withQuery = (path: string, params: Record<string, string>) =>
+  `${path}?${new URLSearchParams(params).toString()}`;
+
 /** Chemin courant (sans le `#` ni la query string), réactif aux changements de hash. */
 export const usePath = () => useSyncExternalStore(subscribe, readPath, () => "/");
 

@@ -2,13 +2,28 @@ import { lazy, type ComponentType, type LazyExoticComponent } from "react";
 
 export interface RouteDefinition {
   path: string;
+  /**
+   * - "private" : session requise, affichée dans le shell (redirection vers /login sinon) ;
+   * - "guest" : pages de connexion, réservées aux visiteurs non connectés (redirection vers / sinon).
+   */
+  access: "private" | "guest";
   /** Page chargée à la demande (découpage du bundle). Reçoit les paramètres de l'URL. */
   page: LazyExoticComponent<ComponentType<{ params: Record<string, string> }>>;
 }
 
-// Table des routes, dans l'ordre de priorité. Les routes publiques (connexion…) arrivent avec la feature auth.
+// Table des routes, dans l'ordre de priorité.
 export const routes: RouteDefinition[] = [
-  { path: "/", page: lazy(() => import("@/pages/HomePage")) },
+  { path: "/login", access: "guest", page: lazy(() => import("@/pages/auth/LoginPage")) },
+  { path: "/register", access: "guest", page: lazy(() => import("@/pages/auth/RegisterPage")) },
+  {
+    path: "/verify-email",
+    access: "guest",
+    page: lazy(() => import("@/pages/auth/VerifyEmailPage")),
+  },
+  { path: "/", access: "private", page: lazy(() => import("@/pages/HomePage")) },
 ];
 
 export const notFoundPage = lazy(() => import("@/pages/NotFoundPage"));
+
+export const LOGIN_PATH = "/login";
+export const HOME_PATH = "/";

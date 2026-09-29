@@ -63,6 +63,32 @@ Règles :
 - Composants QuickadUI d'abord ; couleurs uniquement via les tokens sémantiques (`bg-neutral-1`, `text-accent-11`…) pour
   que le mode sombre fonctionne.
 
+## Authentification
+
+| Page         | Route                      | Parcours                                                              |
+| ------------ | -------------------------- | --------------------------------------------------------------------- |
+| Inscription  | `#/register`               | Aucune session ouverte : redirection vers la vérification de l'e-mail |
+| Vérification | `#/verify-email?email=...` | Code à 6 chiffres reçu par e-mail → session ouverte ; renvoi possible |
+| Connexion    | `#/login`                  | Mot de passe → code MFA reçu par e-mail → session ouverte             |
+
+- Les pages privées redirigent vers `#/login` sans session ; les pages de connexion redirigent vers `#/` avec une session.
+- **Session** : l'access token reste en mémoire ; le refresh token et l'identité du tenant sont en `localStorage` pour
+  survivre à un rechargement. Au démarrage, la session est renouvelée. Un token expiré ou révoqué déclenche un seul
+  renouvellement, même si plusieurs requêtes échouent en même temps (le refresh token est à usage unique).
+- **Limite connue** : un refresh token en `localStorage` est lisible par un script injecté (XSS). Un cookie `httpOnly`
+  posé par l'API supprimerait ce risque.
+- Les règles de mot de passe de l'API sont définies une seule fois (`features/auth/schemas.ts`) : validation zod et
+  indicateur de robustesse.
+
+## Test de contrat avec l'API réelle
+
+`src/api/*.contract.test.ts` vérifie que les réponses de la vraie API correspondent aux schémas du front. Ignoré par
+`npm test` ; à lancer avec l'API démarrée (par exemple `docker compose up` dans auth-web-app-api, e-mails en console) :
+
+```bash
+API_CONTRACT_URL=http://localhost:8080 API_CONTRACT_CODE_CMD='docker compose -f ../auth-web-app-api/docker-compose.yml logs api --since 20s | grep -o "\"code\":\"[0-9]\{6\}\"" | tail -1 | grep -o "[0-9]\{6\}"' npx vitest run src/api/auth.api.contract.test.ts
+```
+
 ## Choix techniques
 
 - **TypeScript 6** et non 7 : TypeScript 7 (réécrit en Go) n'expose pas l'API JavaScript dont ESLint a besoin.
