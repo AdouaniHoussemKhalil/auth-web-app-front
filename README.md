@@ -83,11 +83,12 @@ Règles :
 
 ## Applications
 
-| Page     | Route           | Contenu                                                                                                                             |
-| -------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Liste    | `#/apps?page=1` | Applications du tenant, paginées (page dans l'URL) ; jamais de secret affiché                                                       |
-| Création | `#/apps/new`    | Informations obligatoires, puis réglages de sécurité pré-remplis (durées, mode MFA, vérification e-mail) et apparence des e-mails   |
-| Détail   | `#/apps/:appId` | Identifiants `x-app-id` / `x-app-secret` (secret masqué, copiable), activation, rotation du secret avec confirmation, configuration |
+| Page         | Route                          | Contenu                                                                                                                                                           |
+| ------------ | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Liste        | `#/apps?page=1`                | Applications du tenant, paginées (page dans l'URL) ; jamais de secret affiché                                                                                     |
+| Création     | `#/apps/new`                   | Informations obligatoires, puis réglages de sécurité pré-remplis (durées, mode MFA, vérification e-mail) et apparence des e-mails                                 |
+| Détail       | `#/apps/:appId`                | Identifiants `x-app-id` / `x-app-secret` (secret masqué, copiable), activation, rotation du secret avec confirmation, configuration                               |
+| Utilisateurs | `#/apps/:appId/users?q=&page=` | Comptes de l'application : recherche par e-mail, statut, Google / MFA / e-mail non vérifié, détail, blocage (ferme ses sessions) et suppression avec confirmation |
 
 Chaque vue gère les états chargement, erreur (avec « Réessayer »), vide et données.
 
@@ -115,11 +116,14 @@ application Node + React. La page est publique : lisible sans compte, dans le da
 
 ## Test de contrat avec l'API réelle
 
-`src/api/*.contract.test.ts` (auth et applications) vérifie que les réponses de la vraie API correspondent aux schémas du front. Ignoré par
-`npm test` ; à lancer avec l'API démarrée (par exemple `docker compose up` dans auth-web-app-api, e-mails en console) :
+`src/api/*.contract.test.ts` (auth, applications et utilisateurs) vérifie que les réponses de la vraie API correspondent aux schémas du front. Ignoré par
+`npm test` ; à lancer avec l'API démarrée (par exemple `docker compose up` dans auth-web-app-api, e-mails en console).
+Les appels visent uniquement `API_CONTRACT_URL` (et non `VITE_API_BASE_URL`) : pointez-la vers une API de test, jamais
+vers une API branchée sur une vraie base, car le test crée des comptes et envoie des e-mails. Lancer les fichiers un par
+un (`--no-file-parallelism`) pour que chaque test lise son propre code :
 
 ```bash
-API_CONTRACT_URL=http://localhost:8080 API_CONTRACT_CODE_CMD='docker compose -f ../auth-web-app-api/docker-compose.yml logs api --since 20s | grep -o "\"code\":\"[0-9]\{6\}\"" | tail -1 | grep -o "[0-9]\{6\}"' npx vitest run src/api
+API_CONTRACT_URL=http://localhost:8080 API_CONTRACT_CODE_CMD='docker compose -f ../auth-web-app-api/docker-compose.yml logs api --since 20s | grep -o "\"code\":\"[0-9]\{6\}\"" | tail -1 | grep -o "[0-9]\{6\}"' npx vitest run src/api --no-file-parallelism
 ```
 
 ## Choix techniques

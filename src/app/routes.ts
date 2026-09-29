@@ -33,6 +33,11 @@ export const routes: RouteDefinition[] = [
   // "/apps/new" avant "/apps/:appId", sinon "new" serait pris pour un identifiant.
   { path: "/apps/new", access: "private", page: lazy(() => import("@/pages/apps/AppCreatePage")) },
   {
+    path: "/apps/:appId/users",
+    access: "private",
+    page: lazy(() => import("@/pages/apps/AppUsersPage")),
+  },
+  {
     path: "/apps/:appId",
     access: "private",
     page: lazy(() => import("@/pages/apps/AppDetailPage")),

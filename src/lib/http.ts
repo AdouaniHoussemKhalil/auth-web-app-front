@@ -33,7 +33,7 @@ export const configureHttpAuth = (handlers: HttpAuthHandlers | null) => {
 };
 
 export interface HttpOptions {
-  method?: "GET" | "POST" | "PUT" | "DELETE" | undefined;
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | undefined;
   body?: unknown;
   /** Joint le token et l'en-tête X-Tenant-Id. Défaut : true. */
   auth?: boolean | undefined;

@@ -1,3 +1,4 @@
+import { Button } from "@/components/Button";
 import { Link } from "@/components/Link";
 import { PageHeader } from "@/components/PageHeader";
 import { ErrorState } from "@/components/StateMessages";
@@ -20,6 +21,7 @@ import {
 import { Switch } from "@quickadui/forms";
 import { Flex, Grid, Stack } from "@quickadui/layout";
 import { toast } from "@quickadui/overlays";
+import { navigate } from "@/lib/router";
 
 const Setting = ({ label, value }: { label: string; value: string | undefined }) => (
   <div>
@@ -91,6 +93,23 @@ export default function AppDetailPage({ params }: { params: Record<string, strin
                 />
               </Flex>
             </Stack>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Utilisateurs</CardTitle>
+            <CardDescription>
+              Consultez les comptes de l'application, bloquez ou supprimez un utilisateur.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button
+              variant="outline"
+              onClick={() => navigate(`/apps/${encodeURIComponent(app.id)}/users`)}
+            >
+              Gérer les utilisateurs
+            </Button>
           </CardContent>
         </Card>
 
