@@ -2,7 +2,6 @@ import { navigate } from "@/lib/router";
 import {
   Avatar,
   AvatarFallback,
-  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -10,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@quickadui/core";
+import { Button } from "@/components/Button";
 import { useAuth } from "../hooks/useAuth";
 
 /** Menu du tenant connecté dans la barre du haut : identité et déconnexion. */
@@ -22,9 +22,16 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" aria-label={`Menu de ${user.firstName} ${user.lastName}`}>
-          <Avatar className="size-6">
-            <AvatarFallback>{initials}</AvatarFallback>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-auto gap-2 rounded-full py-1 pr-3 pl-1"
+          aria-label={`Menu de ${user.firstName} ${user.lastName}`}
+        >
+          <Avatar size="sm">
+            <AvatarFallback className="bg-accent-3 text-xs font-semibold text-accent-11">
+              {initials}
+            </AvatarFallback>
           </Avatar>
           <span className="hidden sm:inline">{user.firstName}</span>
         </Button>
