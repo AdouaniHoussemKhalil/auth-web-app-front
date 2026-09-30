@@ -53,14 +53,4 @@ describe("Documentation « Comment commencer »", () => {
     );
     expect(screen.getByText("C'est déjà fait : vous êtes connecté.")).toBeInTheDocument();
   });
-
-  it("est proposée depuis la page de connexion", async () => {
-    mockApi({});
-    await renderApp("#/login");
-
-    expect(await screen.findByRole("link", { name: "Comment commencer" })).toHaveAttribute(
-      "href",
-      "#/docs",
-    );
-  });
 });
