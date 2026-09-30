@@ -70,6 +70,11 @@ describe("Connexion Google du dashboard", () => {
     expect(google.initialize).toHaveBeenCalledWith(
       expect.objectContaining({ client_id: "dashboard.apps.googleusercontent.com" }),
     );
+    // Même couleur que le bouton principal : noir en thème clair.
+    expect(google.renderButton).toHaveBeenCalledWith(
+      expect.any(HTMLElement),
+      expect.objectContaining({ theme: "filled_black", text: "continue_with" }),
+    );
   });
 
   it("place le bouton Google sous le bouton principal, séparé par « ou »", async () => {

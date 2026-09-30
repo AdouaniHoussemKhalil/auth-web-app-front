@@ -54,7 +54,8 @@ export function GoogleSignIn() {
         });
         parent.replaceChildren();
         google.renderButton(parent, {
-          theme: resolvedTheme === "dark" ? "filled_black" : "outline",
+          // Couleurs du bouton principal de la charte : noir en clair, blanc en sombre.
+          theme: resolvedTheme === "dark" ? "outline" : "filled_black",
           text: "continue_with",
           size: "large",
           shape: "rectangular",
