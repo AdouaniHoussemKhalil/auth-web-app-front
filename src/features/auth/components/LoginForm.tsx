@@ -73,17 +73,22 @@ export function LoginForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit((values) => void sendCode.run(values))} noValidate>
         <Stack gap="md">
-          <FormError>
-            {sendCode.error}
-            {sendCode.errorCode === "emailNotVerified" && email && (
-              <>
-                {" "}
-                <Link to={withQuery("/verify-email", { email })} className="underline">
-                  Vérifier mon adresse
-                </Link>
-              </>
-            )}
-          </FormError>
+          {sendCode.error && (
+            <FormError>
+              {sendCode.error}
+              {sendCode.errorCode === "emailNotVerified" && email && (
+                <>
+                  {" "}
+                  <Link
+                    to={withQuery("/verify-email", { email })}
+                    className="underline"
+                  >
+                    Vérifier mon adresse
+                  </Link>
+                </>
+              )}
+            </FormError>
+          )}
           <FormField
             control={form.control}
             name="email"
