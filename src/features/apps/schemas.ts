@@ -40,6 +40,20 @@ export const createAppSchema = z.object({
 
 export type CreateAppValues = z.infer<typeof createAppSchema>;
 
+/** Apparence des e-mails d'une application (modifiable après la création). */
+export const emailBrandingSchema = z.object({
+  name: z.string().trim().min(2, "2 caractères minimum"),
+  logoUrl: optionalUrl,
+  primaryColor: z
+    .string()
+    .trim()
+    .regex(/^#([0-9a-f]{3}){1,2}$/i, "Couleur hexadécimale (#2563eb)")
+    .or(z.literal("")),
+  supportEmail: z.string().trim().email("Adresse e-mail invalide"),
+});
+
+export type EmailBrandingValues = z.infer<typeof emailBrandingSchema>;
+
 export const createAppDefaults: CreateAppValues = {
   name: "",
   redirectUrl: "",

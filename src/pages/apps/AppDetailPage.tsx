@@ -5,7 +5,9 @@ import { ErrorState } from "@/components/StateMessages";
 import {
   AppCredentials,
   AppStatusBadge,
+  EmailBrandingForm,
   GoogleClientIdForm,
+  type EmailBrandingValues,
   RotateSecretDialog,
   useApp,
   useAppActions,
@@ -36,7 +38,8 @@ const Setting = ({ label, value }: { label: string; value: string | undefined })
 export default function AppDetailPage({ params }: { params: Record<string, string> }) {
   const appId = params.appId ?? "";
   const { data: app, isLoading, error, reload, setData } = useApp(appId);
-  const { setActive, setGoogleClientId, rotateSecret } = useAppActions();
+  const { setActive, setGoogleClientId, updateBranding, sendTestEmail, rotateSecret } =
+    useAppActions();
 
   if (error) return <ErrorState message={error} onRetry={reload} />;
   if (isLoading || !app) {
@@ -64,6 +67,29 @@ export default function AppDetailPage({ params }: { params: Record<string, strin
       variant: "success",
     });
     return true;
+  };
+
+  const saveBranding = async (values: EmailBrandingValues) => {
+    const done = await updateBranding.run(app.id, values);
+    if (done === undefined) return false;
+    setData({
+      ...app,
+      name: values.name,
+      branding: {
+        ...app.branding,
+        appName: values.name,
+        supportEmail: values.supportEmail,
+        logoUrl: values.logoUrl || undefined,
+        primaryColor: values.primaryColor || undefined,
+      },
+    });
+    toast({ title: "Apparence des e-mails enregistrée", variant: "success" });
+    return true;
+  };
+
+  const testEmail = async () => {
+    const result = await sendTestEmail.run(app.id);
+    if (result) toast({ title: `E-mail de test envoyé à ${result.to}`, variant: "success" });
   };
 
   const rotate = async () => {
@@ -127,6 +153,33 @@ export default function AppDetailPage({ params }: { params: Record<string, strin
 
         <Card>
           <CardHeader>
+            <CardTitle>Apparence des e-mails</CardTitle>
+            <CardDescription>
+              Les e-mails envoyés aux utilisateurs (codes, mot de passe oublié…) reprennent ce nom,
+              ce logo et cette couleur.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <EmailBrandingForm
+              defaultValues={{
+                name: app.branding?.appName || app.name,
+                supportEmail: app.branding?.supportEmail ?? "",
+                logoUrl: app.branding?.logoUrl ?? "",
+                // Les anciennes applications ont #RRGGBBAA : le champ attend #RRGGBB.
+                primaryColor: (app.branding?.primaryColor ?? "").slice(0, 7),
+              }}
+              isSaving={updateBranding.isPending}
+              saveError={updateBranding.error}
+              onSave={saveBranding}
+              isSendingTest={sendTestEmail.isPending}
+              testError={sendTestEmail.error}
+              onSendTest={() => void testEmail()}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
             <CardTitle>Connexion Google</CardTitle>
             <CardDescription>
               {app.googleClientId
@@ -179,7 +232,6 @@ export default function AppDetailPage({ params }: { params: Record<string, strin
               <Setting label="URL de redirection" value={app.redirectUrl} />
               <Setting label="URL de réinitialisation" value={app.resetPasswordUrl} />
               <Setting label="URL de déconnexion" value={app.logoutUrl} />
-              <Setting label="E-mail de support" value={app.branding?.supportEmail} />
               <Setting label="Access token" value={app.tokenExpiresIn} />
               <Setting label="Refresh token" value={app.refreshTokenExpiresIn} />
               <Setting

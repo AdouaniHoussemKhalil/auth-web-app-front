@@ -59,6 +59,29 @@ describe.skipIf(!baseUrl)("Contrat apps.api avec l'API réelle", () => {
     await appsApi.setActive(user.tenantId, appId, false);
     expect((await appsApi.get(user.tenantId, appId)).isActive).toBe(false);
 
+    await appsApi.updateBranding(user.tenantId, appId, {
+      name: "Contrat Pro",
+      supportEmail: "aide@contrat.test",
+      logoUrl: "https://contrat.test/logo.png",
+      primaryColor: "#16a34a",
+    });
+    const branded = await appsApi.get(user.tenantId, appId);
+    expect(branded.name).toBe("Contrat Pro");
+    expect(branded.branding).toMatchObject({
+      appName: "Contrat Pro",
+      supportEmail: "aide@contrat.test",
+      logoUrl: "https://contrat.test/logo.png",
+      primaryColor: "#16a34a",
+    });
+    await appsApi.updateBranding(user.tenantId, appId, {
+      name: "Contrat Pro",
+      supportEmail: "aide@contrat.test",
+      logoUrl: null,
+      primaryColor: null,
+    });
+    expect((await appsApi.get(user.tenantId, appId)).branding?.logoUrl).toBeUndefined();
+    expect((await appsApi.sendTestEmail(user.tenantId, appId)).to).toBe(email);
+
     const { secretKey } = await appsApi.rotateSecret(user.tenantId, appId);
     expect(secretKey).not.toBe(app.secretKey);
   });
