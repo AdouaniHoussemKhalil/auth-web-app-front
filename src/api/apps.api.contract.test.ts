@@ -82,6 +82,26 @@ describe.skipIf(!baseUrl)("Contrat apps.api avec l'API réelle", () => {
     expect((await appsApi.get(user.tenantId, appId)).branding?.logoUrl).toBeUndefined();
     expect((await appsApi.sendTestEmail(user.tenantId, appId)).to).toBe(email);
 
+    await appsApi.updateSettings(user.tenantId, appId, {
+      redirectUrl: "https://contrat.test/app",
+      resetPasswordUrl: "https://contrat.test/reset-password",
+      logoutUrl: null,
+      emailVerifiedUrl: "https://contrat.test/ok",
+      emailVerificationFailedUrl: "https://contrat.test/ko",
+      emailVerificationMode: "link",
+      passwordResetMode: "link",
+      mfaVerificationMode: "code",
+      requireEmailVerification: false,
+    });
+    expect(await appsApi.get(user.tenantId, appId)).toMatchObject({
+      redirectUrl: "https://contrat.test/app",
+      emailVerificationMode: "link",
+      passwordResetMode: "link",
+      emailVerifiedUrl: "https://contrat.test/ok",
+      mfaSettings: { verificationMode: "code" },
+      requireEmailVerification: false,
+    });
+
     const { secretKey } = await appsApi.rotateSecret(user.tenantId, appId);
     expect(secretKey).not.toBe(app.secretKey);
   });

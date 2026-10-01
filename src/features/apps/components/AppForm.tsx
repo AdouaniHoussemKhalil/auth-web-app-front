@@ -23,6 +23,7 @@ import {
 import { Flex, Grid, Stack } from "@quickadui/layout";
 import type { ReactNode } from "react";
 import { createAppDefaults, createAppSchema, type CreateAppValues } from "../schemas";
+import { VerificationFields } from "./VerificationFields";
 
 export interface AppFormProps {
   isSubmitting: boolean;
@@ -150,6 +151,7 @@ export function AppForm({ isSubmitting, error, onSubmit, onCancel }: AppFormProp
                     </FormItem>
                   )}
                 />
+                <VerificationFields form={form} />
               </Stack>
             </CardContent>
           </Card>

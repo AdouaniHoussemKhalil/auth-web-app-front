@@ -128,6 +128,8 @@ describe("Création d'une application", () => {
       mfaVerificationMode: "code",
       mfaExpiresIn: "15m",
       requireEmailVerification: false,
+      emailVerificationMode: "code",
+      passwordResetMode: "code",
     });
   });
 });
