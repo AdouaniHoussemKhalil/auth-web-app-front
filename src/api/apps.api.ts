@@ -43,6 +43,14 @@ const pageSchema = z.object({
 
 export type AppClientPage = z.infer<typeof pageSchema>;
 
+/** Apparence des e-mails ; null retire le logo ou la couleur. */
+export interface EmailBrandingBody {
+  name: string;
+  logoUrl: string | null;
+  primaryColor: string | null;
+  supportEmail: string;
+}
+
 export interface CreateAppBody {
   name: string;
   redirectUrl: string;
@@ -89,6 +97,18 @@ export const appsApi = {
       `/config/apps/update/${encodeURIComponent(tenantId)}/${encodeURIComponent(appId)}`,
       { method: "PUT", body: { googleClientId } },
     ),
+
+  updateBranding: (tenantId: string, appId: string, body: EmailBrandingBody) =>
+    http<unknown>(
+      `/config/apps/update/${encodeURIComponent(tenantId)}/${encodeURIComponent(appId)}`,
+      { method: "PUT", body },
+    ),
+
+  /** Envoie au tenant connecté un e-mail d'exemple aux couleurs de l'application. */
+  sendTestEmail: (tenantId: string, appId: string) =>
+    http<unknown>(`${base(tenantId)}/${encodeURIComponent(appId)}/test-email`, {
+      method: "POST",
+    }).then((data) => z.object({ data: z.object({ to: z.string() }) }).parse(data).data),
 
   /** Nouveau secret ; les sessions des consumers de l'application sont révoquées par l'API. */
   rotateSecret: (tenantId: string, appId: string) =>

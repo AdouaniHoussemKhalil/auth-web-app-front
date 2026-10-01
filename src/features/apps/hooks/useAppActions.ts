@@ -2,7 +2,7 @@ import { appsApi } from "@/api/apps.api";
 import { useAuth } from "@/features/auth";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { useCallback } from "react";
-import { toCreateAppBody, type CreateAppValues } from "../schemas";
+import { toCreateAppBody, type CreateAppValues, type EmailBrandingValues } from "../schemas";
 
 /** Actions d'écriture sur les applications du tenant connecté. */
 export const useAppActions = () => {
@@ -31,9 +31,27 @@ export const useAppActions = () => {
     ),
   );
 
+  const updateBranding = useAsyncAction(
+    useCallback(
+      (appId: string, values: EmailBrandingValues) =>
+        appsApi.updateBranding(tenantId, appId, {
+          name: values.name,
+          supportEmail: values.supportEmail,
+          // Champ vidé : retour à la valeur par défaut (pas de logo, couleur neutre).
+          logoUrl: values.logoUrl || null,
+          primaryColor: values.primaryColor || null,
+        }),
+      [tenantId],
+    ),
+  );
+
+  const sendTestEmail = useAsyncAction(
+    useCallback((appId: string) => appsApi.sendTestEmail(tenantId, appId), [tenantId]),
+  );
+
   const rotateSecret = useAsyncAction(
     useCallback((appId: string) => appsApi.rotateSecret(tenantId, appId), [tenantId]),
   );
 
-  return { create, setActive, setGoogleClientId, rotateSecret };
+  return { create, setActive, setGoogleClientId, updateBranding, sendTestEmail, rotateSecret };
 };
