@@ -29,6 +29,11 @@ L'API doit tourner (par défaut sur `http://localhost:8080`).
 
 La CI GitHub Actions exécute audit, typecheck, lint, format, tests et build sur chaque PR vers `develop` et `master`.
 
+**Hook pre-commit** (husky + lint-staged, installé par `npm install`) : à chaque `git commit`, les fichiers indexés
+passent par `eslint --fix` puis Prettier (JSON, CSS, Markdown et YAML : Prettier seul) et sont réindexés. Si ESLint
+trouve une erreur qu'il ne sait pas corriger, le commit est refusé avec le message : corriger puis recommiter. Les
+modifications non indexées ne sont pas touchées. Configuration : clé `lint-staged` de `package.json`, `.husky/pre-commit`.
+
 ## Configuration
 
 | Variable                | Défaut                  | Rôle                                                       |

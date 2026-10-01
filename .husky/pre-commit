@@ -1,0 +1,2 @@
+# Avant chaque commit : ESLint --fix puis Prettier sur les fichiers indexés (config : package.json, lint-staged).
+npx lint-staged
