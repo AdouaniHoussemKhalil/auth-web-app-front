@@ -47,6 +47,20 @@ Les variables sont lues uniquement dans `src/config/env.ts`.
 répond `invalidGoogleToken`). Dans Google Cloud Console, ce Client ID « Application Web » doit autoriser l'origine du
 dashboard (`http://localhost:5173` en développement) dans « Origines JavaScript autorisées ».
 
+## Déploiement (Render, site statique)
+
+Le dashboard est un site statique : `npm run build` produit `dist/`, servi tel quel (routage par `#`, aucune règle de
+réécriture). `render.yaml` décrit le service : branche `master`, Node 24, en-têtes de sécurité, cache des assets.
+
+1. Déployer d'abord l'API (voir son README) et noter son URL publique.
+2. Render → _New → Blueprint_ → ce dépôt : renseigner `VITE_API_BASE_URL` (URL de l'API, sans slash final) et
+   `VITE_GOOGLE_CLIENT_ID`. Ces variables sont lues **au build** : après une modification, redéployer.
+3. Côté API : ajouter l'URL du dashboard à `CORS_ORIGINS` (`["https://auth-console.onrender.com"]`).
+4. Google Cloud Console : ajouter l'URL du dashboard aux « Origines JavaScript autorisées » du Client ID.
+
+Un site statique Render ne se met pas en veille ; l'API (offre gratuite) si : la première requête après 15 min
+d'inactivité prend environ 50 s.
+
 ## Architecture
 
 Organisation par fonctionnalité :
