@@ -79,10 +79,7 @@ export function LoginForm() {
               {sendCode.errorCode === "emailNotVerified" && email && (
                 <>
                   {" "}
-                  <Link
-                    to={withQuery("/verify-email", { email })}
-                    className="underline"
-                  >
+                  <Link to={withQuery("/verify-email", { email })} className="underline">
                     Vérifier mon adresse
                   </Link>
                 </>
