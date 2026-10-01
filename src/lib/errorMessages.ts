@@ -17,6 +17,8 @@ const MESSAGES: Record<string, string> = {
   noPendingCode: "Aucun code en attente. Demandez-en un nouveau.",
   tooManyRequests: "Trop de tentatives. Réessayez dans quelques minutes.",
   validationError: "Certaines informations sont invalides.",
+  verificationUrlsRequired:
+    "Le lien de confirmation exige une page « adresse confirmée » et une page « lien invalide ».",
 };
 
 /** Message lisible pour une erreur d'appel à l'API. */

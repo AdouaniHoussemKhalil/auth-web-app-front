@@ -94,12 +94,12 @@ Règles :
 
 ## Applications
 
-| Page         | Route                          | Contenu                                                                                                                                                               |
-| ------------ | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Liste        | `#/apps?page=1`                | Applications du tenant, paginées (page dans l'URL) ; jamais de secret affiché                                                                                         |
-| Création     | `#/apps/new`                   | Informations obligatoires, puis réglages de sécurité pré-remplis (durées, mode MFA, vérification e-mail) et apparence des e-mails                                     |
-| Détail       | `#/apps/:appId`                | Identifiants (secret masqué, copiable), apparence des e-mails (nom, logo, couleur, support, aperçu, e-mail de test), Client ID Google, activation, rotation du secret |
-| Utilisateurs | `#/apps/:appId/users?q=&page=` | Comptes de l'application : recherche par e-mail, statut, Google / MFA / e-mail non vérifié, détail, blocage (ferme ses sessions) et suppression avec confirmation     |
+| Page         | Route                          | Contenu                                                                                                                                                                                      |
+| ------------ | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Liste        | `#/apps?page=1`                | Applications du tenant, paginées (page dans l'URL) ; jamais de secret affiché                                                                                                                |
+| Création     | `#/apps/new`                   | Informations obligatoires, réglages de sécurité pré-remplis (durées, MFA, vérification d'e-mail et mot de passe oublié par code ou par lien, pages de succès / échec), apparence des e-mails |
+| Détail       | `#/apps/:appId`                | Identifiants (secret masqué, copiable), apparence des e-mails (aperçu, e-mail de test), URLs et vérification (modifiables), Client ID Google, activation, rotation du secret                 |
+| Utilisateurs | `#/apps/:appId/users?q=&page=` | Comptes de l'application : recherche par e-mail, statut, Google / MFA / e-mail non vérifié, détail, blocage (ferme ses sessions) et suppression avec confirmation                            |
 
 Chaque vue gère les états chargement, erreur (avec « Réessayer »), vide et données.
 

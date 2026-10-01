@@ -16,6 +16,10 @@ export const appClientSchema = z.object({
   resetTokenExpiresIn: z.string().optional(),
   requireEmailVerification: z.boolean().optional(),
   googleClientId: z.string().optional(),
+  emailVerificationMode: z.enum(["code", "link"]).optional(),
+  passwordResetMode: z.enum(["code", "link"]).optional(),
+  emailVerifiedUrl: z.string().optional(),
+  emailVerificationFailedUrl: z.string().optional(),
   mfaSettings: z
     .object({ verificationMode: z.enum(["code", "link"]), expiryMinutes: z.number() })
     .partial()
@@ -65,6 +69,25 @@ export interface CreateAppBody {
   mfaExpiresIn?: string | undefined;
   requireEmailVerification?: boolean | undefined;
   googleClientId?: string | undefined;
+  emailVerificationMode?: VerificationMode | undefined;
+  passwordResetMode?: VerificationMode | undefined;
+  emailVerifiedUrl?: string | undefined;
+  emailVerificationFailedUrl?: string | undefined;
+}
+
+export type VerificationMode = "code" | "link";
+
+/** URLs et réglages de vérification ; null retire une URL optionnelle. */
+export interface AppSettingsBody {
+  redirectUrl: string;
+  resetPasswordUrl: string;
+  logoutUrl: string | null;
+  emailVerifiedUrl: string | null;
+  emailVerificationFailedUrl: string | null;
+  emailVerificationMode: VerificationMode;
+  passwordResetMode: VerificationMode;
+  mfaVerificationMode: VerificationMode;
+  requireEmailVerification: boolean;
 }
 
 const base = (tenantId: string) => `/config/apps/${encodeURIComponent(tenantId)}`;
@@ -99,6 +122,12 @@ export const appsApi = {
     ),
 
   updateBranding: (tenantId: string, appId: string, body: EmailBrandingBody) =>
+    http<unknown>(
+      `/config/apps/update/${encodeURIComponent(tenantId)}/${encodeURIComponent(appId)}`,
+      { method: "PUT", body },
+    ),
+
+  updateSettings: (tenantId: string, appId: string, body: AppSettingsBody) =>
     http<unknown>(
       `/config/apps/update/${encodeURIComponent(tenantId)}/${encodeURIComponent(appId)}`,
       { method: "PUT", body },

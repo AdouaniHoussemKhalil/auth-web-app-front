@@ -4,9 +4,11 @@ import { PageHeader } from "@/components/PageHeader";
 import { ErrorState } from "@/components/StateMessages";
 import {
   AppCredentials,
+  AppSettingsForm,
   AppStatusBadge,
   EmailBrandingForm,
   GoogleClientIdForm,
+  type AppSettingsValues,
   type EmailBrandingValues,
   RotateSecretDialog,
   useApp,
@@ -38,8 +40,14 @@ const Setting = ({ label, value }: { label: string; value: string | undefined })
 export default function AppDetailPage({ params }: { params: Record<string, string> }) {
   const appId = params.appId ?? "";
   const { data: app, isLoading, error, reload, setData } = useApp(appId);
-  const { setActive, setGoogleClientId, updateBranding, sendTestEmail, rotateSecret } =
-    useAppActions();
+  const {
+    setActive,
+    setGoogleClientId,
+    updateBranding,
+    updateSettings,
+    sendTestEmail,
+    rotateSecret,
+  } = useAppActions();
 
   if (error) return <ErrorState message={error} onRetry={reload} />;
   if (isLoading || !app) {
@@ -84,6 +92,25 @@ export default function AppDetailPage({ params }: { params: Record<string, strin
       },
     });
     toast({ title: "Apparence des e-mails enregistrée", variant: "success" });
+    return true;
+  };
+
+  const saveSettings = async (values: AppSettingsValues) => {
+    const done = await updateSettings.run(app.id, values);
+    if (done === undefined) return false;
+    setData({
+      ...app,
+      redirectUrl: values.redirectUrl,
+      resetPasswordUrl: values.resetPasswordUrl,
+      logoutUrl: values.logoutUrl || undefined,
+      emailVerifiedUrl: values.emailVerifiedUrl || undefined,
+      emailVerificationFailedUrl: values.emailVerificationFailedUrl || undefined,
+      emailVerificationMode: values.emailVerificationMode,
+      passwordResetMode: values.passwordResetMode,
+      requireEmailVerification: values.requireEmailVerification,
+      mfaSettings: { ...app.mfaSettings, verificationMode: values.mfaVerificationMode },
+    });
+    toast({ title: "Réglages enregistrés", variant: "success" });
     return true;
   };
 
@@ -225,27 +252,40 @@ export default function AppDetailPage({ params }: { params: Record<string, strin
 
         <Card>
           <CardHeader>
-            <CardTitle>Configuration</CardTitle>
+            <CardTitle>URLs et vérification</CardTitle>
+            <CardDescription>
+              Pages de votre application vers lesquelles pointent les e-mails, et mode de
+              vérification : code à saisir ou lien.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AppSettingsForm
+              defaultValues={{
+                redirectUrl: app.redirectUrl,
+                resetPasswordUrl: app.resetPasswordUrl,
+                logoutUrl: app.logoutUrl ?? "",
+                emailVerifiedUrl: app.emailVerifiedUrl ?? "",
+                emailVerificationFailedUrl: app.emailVerificationFailedUrl ?? "",
+                emailVerificationMode: app.emailVerificationMode ?? "code",
+                passwordResetMode: app.passwordResetMode ?? "code",
+                mfaVerificationMode: app.mfaSettings?.verificationMode ?? "code",
+                requireEmailVerification: app.requireEmailVerification ?? false,
+              }}
+              isSaving={updateSettings.isPending}
+              error={updateSettings.error}
+              onSave={saveSettings}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Durées des sessions</CardTitle>
           </CardHeader>
           <CardContent>
             <Grid className="grid-cols-1 gap-4 md:grid-cols-2">
-              <Setting label="URL de redirection" value={app.redirectUrl} />
-              <Setting label="URL de réinitialisation" value={app.resetPasswordUrl} />
-              <Setting label="URL de déconnexion" value={app.logoutUrl} />
               <Setting label="Access token" value={app.tokenExpiresIn} />
               <Setting label="Refresh token" value={app.refreshTokenExpiresIn} />
-              <Setting
-                label="Vérification MFA"
-                value={
-                  app.mfaSettings?.verificationMode === "link"
-                    ? "Lien par e-mail"
-                    : "Code à 6 chiffres par e-mail"
-                }
-              />
-              <Setting
-                label="Vérification de l'e-mail"
-                value={app.requireEmailVerification ? "Obligatoire" : "Facultative"}
-              />
             </Grid>
           </CardContent>
         </Card>

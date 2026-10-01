@@ -2,7 +2,12 @@ import { appsApi } from "@/api/apps.api";
 import { useAuth } from "@/features/auth";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { useCallback } from "react";
-import { toCreateAppBody, type CreateAppValues, type EmailBrandingValues } from "../schemas";
+import {
+  toCreateAppBody,
+  type AppSettingsValues,
+  type CreateAppValues,
+  type EmailBrandingValues,
+} from "../schemas";
 
 /** Actions d'écriture sur les applications du tenant connecté. */
 export const useAppActions = () => {
@@ -45,6 +50,20 @@ export const useAppActions = () => {
     ),
   );
 
+  const updateSettings = useAsyncAction(
+    useCallback(
+      (appId: string, values: AppSettingsValues) =>
+        appsApi.updateSettings(tenantId, appId, {
+          ...values,
+          // Champ vidé : l'URL optionnelle est retirée.
+          logoutUrl: values.logoutUrl || null,
+          emailVerifiedUrl: values.emailVerifiedUrl || null,
+          emailVerificationFailedUrl: values.emailVerificationFailedUrl || null,
+        }),
+      [tenantId],
+    ),
+  );
+
   const sendTestEmail = useAsyncAction(
     useCallback((appId: string) => appsApi.sendTestEmail(tenantId, appId), [tenantId]),
   );
@@ -53,5 +72,13 @@ export const useAppActions = () => {
     useCallback((appId: string) => appsApi.rotateSecret(tenantId, appId), [tenantId]),
   );
 
-  return { create, setActive, setGoogleClientId, updateBranding, sendTestEmail, rotateSecret };
+  return {
+    create,
+    setActive,
+    setGoogleClientId,
+    updateBranding,
+    updateSettings,
+    sendTestEmail,
+    rotateSecret,
+  };
 };
