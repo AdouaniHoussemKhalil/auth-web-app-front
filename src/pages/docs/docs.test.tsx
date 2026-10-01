@@ -38,6 +38,11 @@ describe("Documentation « Comment commencer »", () => {
       within(server as HTMLElement).getByText(/app\.post\("\/auth\/login"/),
     ).toBeInTheDocument();
     expect(screen.getByText("LoginPage.tsx", { selector: "figcaption" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Vérification d'e-mail et mot de passe oublié : code ou lien",
+      }),
+    ).toBeInTheDocument();
     expect(screen.getByText(/AUTH_API_URL=http:\/\/localhost:8080/)).toBeInTheDocument();
   });
 
