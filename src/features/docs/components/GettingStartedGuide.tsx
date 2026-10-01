@@ -155,22 +155,50 @@ AUTH_APP_SECRET=<x-app-secret de votre application>
         </P>
       </DocStep>
 
-      <DocStep number={8} title="Aller plus loin">
+      <DocStep number={8} title="Vérification d'e-mail et mot de passe oublié : code ou lien">
+        <P>
+          Chaque application choisit, dans sa fiche (carte « URLs et vérification »), un code à 6
+          chiffres ou un lien pour ces deux parcours. Si l'application exige la vérification,
+          l'inscription ne renvoie pas de tokens et la connexion répond <C>403 emailNotVerified</C>{" "}
+          tant que l'adresse n'est pas confirmée.
+        </P>
         <Stack gap="xs" as="ul" className="list-disc pl-5 text-neutral-11">
           <li>
-            <strong>Vérification d'e-mail</strong> : un code est envoyé à l'inscription (
-            <C>/consumers/auth/verifyEmail</C>). Si l'application l'exige, l'inscription ne renvoie
-            pas de tokens et la connexion répond <C>403 emailNotVerified</C> tant que l'adresse
-            n'est pas confirmée.
+            <strong>Vérification par code</strong> : l'utilisateur saisit le code reçu dans votre
+            page de vérification, que votre back envoie à <C>/consumers/auth/verifyEmail</C> (
+            <C>{"{ email, code }"}</C>). Cette route n'ouvre pas de session : enchaînez sur la
+            connexion.
           </li>
+          <li>
+            <strong>Vérification par lien</strong> : le lien passe par l'API, qui vérifie l'adresse
+            puis redirige vers votre page « adresse confirmée », ou vers votre page « lien invalide
+            » avec <C>?reason=expired</C> ou <C>?reason=invalid</C> (proposez-y d'envoyer un nouveau
+            lien : <C>/consumers/auth/resendEmailVerification</C>). Ces deux pages n'appellent
+            aucune API.
+          </li>
+          <li>
+            <strong>Mot de passe oublié par code</strong> : <C>/consumers/auth/forgotPassword</C>,
+            puis <C>/consumers/auth/verifyResetCode</C> (code → jeton à usage unique), puis{" "}
+            <C>/consumers/auth/resetPassword</C>.
+          </li>
+          <li>
+            <strong>Mot de passe oublié par lien</strong> : l'e-mail ouvre votre URL de
+            réinitialisation avec <C>?token=…&amp;email=…</C>. Cette page demande le nouveau mot de
+            passe et l'envoie (via votre back) à <C>/consumers/auth/resetPassword</C> avec{" "}
+            <C>resetToken</C> = <C>token</C>.
+          </li>
+          <li>
+            Après une réinitialisation ou un changement de mot de passe, toutes les sessions sont
+            fermées et l'utilisateur reçoit un e-mail d'alerte « mot de passe modifié ».
+          </li>
+        </Stack>
+      </DocStep>
+
+      <DocStep number={9} title="Aller plus loin">
+        <Stack gap="xs" as="ul" className="list-disc pl-5 text-neutral-11">
           <li>
             <strong>Double authentification</strong> : l'utilisateur l'active avec{" "}
             <C>/consumers/auth/requestMFA</C> puis <C>/consumers/auth/activateMFA</C>.
-          </li>
-          <li>
-            <strong>Mot de passe oublié</strong> : <C>/consumers/auth/forgotPassword</C> (code par
-            e-mail), puis <C>/consumers/auth/verifyResetCode</C> (jeton à usage unique), puis{" "}
-            <C>/consumers/auth/resetPassword</C>. À relayer par votre back comme les autres routes.
           </li>
           <li>
             <strong>Erreurs</strong> : toutes les erreurs ont la forme{" "}
