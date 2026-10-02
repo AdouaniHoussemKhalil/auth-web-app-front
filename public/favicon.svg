@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Auth Console : bouclier à serrure, couleurs de la charte (accent #D97757, ivoire #FAF9F5) -->
+  <rect width="32" height="32" rx="7.5" fill="#D97757"/>
+  <path d="M16 5.5l8.5 3.2v6.6c0 5.3-3.6 9.4-8.5 11.2-4.9-1.8-8.5-5.9-8.5-11.2V8.7z" fill="#FAF9F5"/>
+  <circle cx="16" cy="14.2" r="2.6" fill="#D97757"/>
+  <rect x="14.9" y="15.4" width="2.2" height="5.4" rx="1.1" fill="#D97757"/>
+</svg>
