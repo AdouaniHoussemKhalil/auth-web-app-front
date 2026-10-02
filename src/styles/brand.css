@@ -1,0 +1,97 @@
+/*
+ * Charte graphique « façon Claude » : ivoire et brun chaud, texte presque noir / presque blanc,
+ * accent orange doux. Remplace les échelles neutral et accent de @quickadui/theme (mêmes variables,
+ * mêmes sélecteurs que tokens.css), en respectant la convention des échelles :
+ * 1-2 fonds, 3-5 fonds interactifs, 6-8 bordures, 9-10 couleurs pleines, 11-12 textes.
+ * À importer après @quickadui/theme/tokens.css.
+ */
+
+:root {
+  /* Neutres chauds — clair */
+  --qa-color-neutral-1: #faf9f5; /* fond de page (ivoire) */
+  --qa-color-neutral-2: #f5f4ed; /* fonds secondaires : barre latérale, cartes */
+  --qa-color-neutral-3: #efede4; /* survol */
+  --qa-color-neutral-4: #e8e6dc; /* actif */
+  --qa-color-neutral-5: #dfddd2;
+  --qa-color-neutral-6: #d6d3c8; /* bordures discrètes */
+  --qa-color-neutral-7: #c3c0b4; /* bordures */
+  --qa-color-neutral-8: #a9a69b; /* bordures marquées */
+  --qa-color-neutral-9: #87857d;
+  --qa-color-neutral-10: #74726b;
+  --qa-color-neutral-11: #5e5d59; /* texte secondaire */
+  --qa-color-neutral-12: #141413; /* texte, bouton principal */
+
+  /* Accent orange doux — clair */
+  --qa-color-accent-1: #fdf8f5;
+  --qa-color-accent-2: #fbf0ea;
+  --qa-color-accent-3: #f7e2d8;
+  --qa-color-accent-4: #f2d2c4;
+  --qa-color-accent-5: #ebc0ad;
+  --qa-color-accent-6: #e3aa92;
+  --qa-color-accent-7: #db9376;
+  --qa-color-accent-8: #d9825f; /* anneau de focus */
+  --qa-color-accent-9: #d97757;
+  --qa-color-accent-10: #c6613f;
+  --qa-color-accent-11: #a8492b; /* liens et texte d'accent */
+  --qa-color-accent-12: #5c2a1a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* Neutres chauds — sombre */
+    --qa-color-neutral-1: #1f1e1d;
+    --qa-color-neutral-2: #262624;
+    --qa-color-neutral-3: #30302e;
+    --qa-color-neutral-4: #3a3935;
+    --qa-color-neutral-5: #43423e;
+    --qa-color-neutral-6: #4d4c47;
+    --qa-color-neutral-7: #5e5d58;
+    --qa-color-neutral-8: #73726c;
+    --qa-color-neutral-9: #87867f;
+    --qa-color-neutral-10: #9c9a92;
+    --qa-color-neutral-11: #c2c0b6;
+    --qa-color-neutral-12: #faf9f5;
+
+    /* Accent orange doux — sombre */
+    --qa-color-accent-1: #221916;
+    --qa-color-accent-2: #2b1f1a;
+    --qa-color-accent-3: #3b2921;
+    --qa-color-accent-4: #473027;
+    --qa-color-accent-5: #55382d;
+    --qa-color-accent-6: #684335;
+    --qa-color-accent-7: #825241;
+    --qa-color-accent-8: #a3654e;
+    --qa-color-accent-9: #d97757;
+    --qa-color-accent-10: #e3876a;
+    --qa-color-accent-11: #f0a58a;
+    --qa-color-accent-12: #fbd9cb;
+  }
+}
+
+:root[data-theme="dark"] {
+  --qa-color-neutral-1: #1f1e1d;
+  --qa-color-neutral-2: #262624;
+  --qa-color-neutral-3: #30302e;
+  --qa-color-neutral-4: #3a3935;
+  --qa-color-neutral-5: #43423e;
+  --qa-color-neutral-6: #4d4c47;
+  --qa-color-neutral-7: #5e5d58;
+  --qa-color-neutral-8: #73726c;
+  --qa-color-neutral-9: #87867f;
+  --qa-color-neutral-10: #9c9a92;
+  --qa-color-neutral-11: #c2c0b6;
+  --qa-color-neutral-12: #faf9f5;
+
+  --qa-color-accent-1: #221916;
+  --qa-color-accent-2: #2b1f1a;
+  --qa-color-accent-3: #3b2921;
+  --qa-color-accent-4: #473027;
+  --qa-color-accent-5: #55382d;
+  --qa-color-accent-6: #684335;
+  --qa-color-accent-7: #825241;
+  --qa-color-accent-8: #a3654e;
+  --qa-color-accent-9: #d97757;
+  --qa-color-accent-10: #e3876a;
+  --qa-color-accent-11: #f0a58a;
+  --qa-color-accent-12: #fbd9cb;
+}
